@@ -134,6 +134,7 @@ const OutputPage = () => {
     }
     toast.success(message, {
       autoClose: 300,
+      onClose: () => window.location.reload(),
     });
   };
 

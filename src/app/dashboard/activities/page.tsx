@@ -98,7 +98,10 @@ export default function ActivitiesPage() {
       );
     }
 
-    toast.success(message, { autoClose: 1000 });
+    toast.success(message, {
+      autoClose: 1000,
+      onClose: () => window.location.reload(),
+    });
   };
 
   return (

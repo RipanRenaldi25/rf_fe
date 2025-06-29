@@ -128,7 +128,10 @@ const CalculatorPage = () => {
       },
     ]);
 
-    toast.success(message, { autoClose: 300 });
+    toast.success(message, {
+      autoClose: 300,
+      onClose: () => window.location.reload(),
+    });
   };
 
   return (
