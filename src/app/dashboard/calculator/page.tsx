@@ -138,28 +138,18 @@ const CalculatorPage = () => {
       },
     ]);
 
-    if (summary.length === 0) {
-      setSummary((prevValue: ISummary[]) => [
-        ...prevValue,
-        {
-          type: payload.material?.type,
-          total: +payload.stock,
-        },
-      ]);
-    } else {
-      setSummary((prevValue: ISummary[]) =>
-        prevValue.map((val) => ({
-          ...val,
-          total:
-            val.type === payload.material?.type
-              ? new Decimal(val.total)
-                  .minus(+payload.stock)
-                  .toDecimalPlaces(2)
-                  .toNumber()
-              : val.total,
-        }))
-      );
-    }
+    setSummary((prevValue: ISummary[]) =>
+      prevValue.map((val) => ({
+        ...val,
+        total:
+          val.type === payload.material?.type
+            ? new Decimal(val.total)
+                .minus(+payload.stock)
+                .toDecimalPlaces(2)
+                .toNumber()
+            : val.total,
+      }))
+    );
 
     toast.success(message, {
       autoClose: 300,

@@ -127,28 +127,18 @@ const OutputPage = () => {
       mappedInventoryData,
     ]);
 
-    if (summary.length === 0) {
-      setSummary((prevValue: ISummary[]) => [
-        ...prevValue,
-        {
-          type: row.type,
-          total: +row.stock,
-        },
-      ]);
-    } else {
-      setSummary((prevValue: ISummary[]) =>
-        prevValue.map((val) => ({
-          ...val,
-          total:
-            val.type === row.material?.type
-              ? new Decimal(val.total)
-                  .minus(+row.stock)
-                  .toDecimalPlaces(2)
-                  .toNumber()
-              : val.total,
-        }))
-      );
-    }
+    setSummary((prevValue: ISummary[]) =>
+      prevValue.map((val) => ({
+        ...val,
+        total:
+          val.type === row.material?.type
+            ? new Decimal(val.total)
+                .minus(+row.stock)
+                .toDecimalPlaces(2)
+                .toNumber()
+            : val.total,
+      }))
+    );
     toast.success(message, {
       autoClose: 300,
     });

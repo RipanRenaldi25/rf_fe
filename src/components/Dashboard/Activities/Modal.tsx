@@ -112,12 +112,15 @@ export const Modal = memo(
       ]);
 
       setShowModal(false);
-      if (summary.length === 0) {
+      const isExists: boolean = summary.some(
+        (val: any) => val.type === values.type
+      );
+      if (!isExists) {
         setSummary((prevValue: ISummary[]) => [
           ...prevValue,
           {
             type: values.type,
-            total: +values.stock,
+            total: new Decimal(stock).toDecimalPlaces(2).toNumber(),
           },
         ]);
       } else {
