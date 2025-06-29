@@ -103,8 +103,8 @@ export const Modal = memo(
       };
 
       setInventoryData((prevValue: ITransactionWithMaterial[]) => [
-        ...prevValue,
         mappedInventoryData,
+        ...prevValue,
       ]);
 
       setShowModal(false);
