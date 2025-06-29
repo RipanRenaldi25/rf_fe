@@ -8,12 +8,14 @@ import EfficiencyLineChart, {
   defaultChartData,
 } from "@/components/Dashboard/EfficiencyLineChart";
 import { PerformanceLineChart } from "@/components/Dashboard/PerformanceLineChart";
+import { InventoryContext } from "@/context/InventoryContext";
 import {
   getPerformanceSummary,
   getRecapSummary,
   getUsageStatistic,
   getWeekUsageStatistic,
 } from "@/lib/api/StatisticAPI";
+import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -22,6 +24,8 @@ export default function DashboardPage() {
   const [pieChartData, setPieChartData] = useState<any>([]);
   const [lineChartData, setLineChartData] = useState<any>([]);
   const [performanceData, setPerformanceData] = useState<any>([]);
+  const { inventoryData } = useContext(InventoryContext);
+
   useEffect(() => {
     async function recapSummary() {
       const data = await getRecapSummary();
@@ -99,15 +103,19 @@ export default function DashboardPage() {
 
         const wasteData = 100 - dataToInsert;
 
-        setPieChartData((prevValue: any) => [
-          ...prevValue,
-          {
-            fill: "#B9B28A",
-            tailwindColor: "bg-[#504B38]/50",
-            data: +wasteData.toFixed(2),
-            type: "Bahan Terbuang",
-          },
-        ]);
+        const dataForChart = [];
+
+        setPieChartData((prevValue: any) =>
+          [
+            ...prevValue,
+            {
+              fill: "#B9B28A",
+              tailwindColor: "bg-[#B9B28A]",
+              data: +wasteData.toFixed(2),
+              type: "Bahan Terbuang",
+            },
+          ].filter((val) => val.data > 0)
+        );
       }
     }
 
@@ -150,7 +158,7 @@ export default function DashboardPage() {
       fetchEfficiencyData(),
       fetchPerformanceData(),
     ]);
-  }, []);
+  }, [inventoryData]);
 
   return (
     <article className="w-full">

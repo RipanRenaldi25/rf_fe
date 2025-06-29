@@ -60,7 +60,7 @@ export default function CustomSelect({
                     onClick={(e: any) => {
                       setSelected(option);
                       setOpen(false);
-                      onChange(Number(option.id));
+                      onChange(Number(option.id), setSelected);
                     }}
                   >
                     {option.rack} {option.number}

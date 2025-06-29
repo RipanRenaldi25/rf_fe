@@ -15,7 +15,7 @@ import { ShelfContext } from "@/context/ShelfContext";
 import { addMaterial } from "@/lib/api/inventoryApi";
 import { changeComaToDot } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { X } from "lucide-react";
+import { AlignVerticalDistributeStart, X } from "lucide-react";
 import { memo, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -23,6 +23,7 @@ import { z } from "zod";
 import CustomSelect from "./CustomSelect";
 import { WeekSummaryContext } from "@/context/WeekSummaryContext";
 import { usePathname } from "next/navigation";
+import Decimal from "decimal.js";
 
 const InputSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -35,7 +36,7 @@ const InputSchema = z.object({
     .string()
     .min(1, { message: "Stock minimum is greather than 10 gram" }),
   type: z
-    .enum(["WASTE", "REUSE", "REUTILIZATION"], {
+    .enum(["WASTE", "REUSE", "REUTILIZATION", ""], {
       message: "Only Waste, Reuse and Reutilization is accepted",
     })
     .default("REUSE"),
@@ -52,6 +53,7 @@ export const Modal = memo(
         color: "",
         detail: "",
         stock: "",
+        type: "",
       },
     });
 
@@ -61,9 +63,14 @@ export const Modal = memo(
 
     const handleSubmit = async (values: z.infer<typeof InputSchema>) => {
       const stock = changeComaToDot(values.stock);
+      if (values.type === "") {
+        toast.error("Pilih kategori terlebih dahulu", { autoClose: 1000 });
+        return;
+      }
       const payload: IAddInventoryPayload = {
         ...values,
         stock,
+        type: values.type,
       };
 
       const { message, success, data } = await addMaterial(payload);
@@ -113,19 +120,26 @@ export const Modal = memo(
         setSummary((prevValue: ISummary[]) =>
           prevValue.map((val) => ({
             ...val,
-            total: val.type === values.type ? val.total + stock : val.total,
+            total:
+              val.type === values.type
+                ? new Decimal(val.total)
+                    .plus(+stock)
+                    .toDecimalPlaces(2)
+                    .toNumber()
+                : val.total,
           }))
         );
       }
       form.reset();
+      setSelected(null);
       toast.success(message, {
         autoClose: 500,
-        onClose: () => window.location.reload(),
       });
     };
 
     const { setShowAddRact } = useContext(ModalContext);
     const { shelfs } = useContext(ShelfContext);
+    let setSelected: any = null;
 
     return (
       <section
@@ -259,6 +273,9 @@ export const Modal = memo(
                             className="w-full p-2 border rounded-md"
                             {...field}
                           >
+                            <option value={""}>
+                              <p className="text-gray-200">Pilih Kategori</p>
+                            </option>
                             <option value={"REUSE"}>Reuse</option>
                             <option value={"REUTILIZATION"}>
                               Reutilization
@@ -283,6 +300,11 @@ export const Modal = memo(
                             setIsAddRact={setShowAddRact}
                             shelfOptions={shelfs}
                             {...field}
+                            onChange={(val: any, setSelectedFunc: any) => {
+                              console.log({ val, setSelectedFunc });
+                              field.onChange(val);
+                              setSelected = setSelectedFunc;
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
