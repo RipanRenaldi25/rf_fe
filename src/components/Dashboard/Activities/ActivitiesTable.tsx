@@ -12,12 +12,9 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
-  ColumnFiltersState,
-  getFilteredRowModel,
 } from "@tanstack/react-table";
-import { useState, memo } from "react";
+import { useState } from "react";
 
 interface DataTableProps<TData, TColumn> {
   columns: ColumnDef<TData, TColumn>[];

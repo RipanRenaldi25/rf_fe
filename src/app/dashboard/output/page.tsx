@@ -1,5 +1,6 @@
 "use client";
 export const dynamic = "force-dynamic";
+import Decimal from "decimal.js";
 
 import { ActivitiesTable } from "@/components/Dashboard/Activities/ActivitiesTable";
 import { Button } from "@/components/ui/button";
@@ -127,14 +128,16 @@ const OutputPage = () => {
           ...val,
           total:
             val.type === row.material?.type
-              ? val.total - +row.stock
+              ? new Decimal(val.total)
+                  .minus(+row.stock)
+                  .toDecimalPlaces(2)
+                  .toNumber()
               : val.total,
         }))
       );
     }
     toast.success(message, {
       autoClose: 300,
-      onClose: () => window.location.reload(),
     });
   };
 

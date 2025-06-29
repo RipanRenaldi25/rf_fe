@@ -32,6 +32,7 @@ import { calculate, releaseMaterial } from "@/lib/api/inventoryApi";
 import { changeComaToDot } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
+import Decimal from "decimal.js";
 
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -96,7 +97,7 @@ const CalculatorPage = () => {
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const { inventoryData, setInventoryData } = useContext(InventoryContext);
-  const { setSummary } = useContext(WeekSummaryContext);
+  const { setSummary, summary } = useContext(WeekSummaryContext);
 
   const releaseMaterialHandler = async (payload: any) => {
     const { message, success, data } = await releaseMaterial(+payload.id, {
@@ -128,9 +129,31 @@ const CalculatorPage = () => {
       },
     ]);
 
+    if (summary.length === 0) {
+      setSummary((prevValue: ISummary[]) => [
+        ...prevValue,
+        {
+          type: payload.material?.type,
+          total: +payload.stock,
+        },
+      ]);
+    } else {
+      setSummary((prevValue: ISummary[]) =>
+        prevValue.map((val) => ({
+          ...val,
+          total:
+            val.type === payload.material?.type
+              ? new Decimal(val.total)
+                  .minus(+payload.stock)
+                  .toDecimalPlaces(2)
+                  .toNumber()
+              : val.total,
+        }))
+      );
+    }
+
     toast.success(message, {
       autoClose: 300,
-      onClose: () => window.location.reload(),
     });
   };
 

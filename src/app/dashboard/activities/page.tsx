@@ -10,6 +10,7 @@ import { ModalContext } from "@/context/Modal";
 import { ShelfContext } from "@/context/ShelfContext";
 import { WeekSummaryContext } from "@/context/WeekSummaryContext";
 import { getAllInventories, releaseMaterial } from "@/lib/api/inventoryApi";
+import Decimal from "decimal.js";
 import { Plus } from "lucide-react";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
@@ -92,7 +93,10 @@ export default function ActivitiesPage() {
           ...val,
           total:
             val.type === row.material?.type
-              ? val.total - Number(row.stock)
+              ? new Decimal(val.total)
+                  .minus(+row.stock)
+                  .toDecimalPlaces(2)
+                  .toNumber()
               : val.total,
         }))
       );
@@ -100,7 +104,6 @@ export default function ActivitiesPage() {
 
     toast.success(message, {
       autoClose: 1000,
-      onClose: () => window.location.reload(),
     });
   };
 
