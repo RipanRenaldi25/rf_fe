@@ -35,7 +35,7 @@ export default function ActivitiesPage() {
           .includes(searchKeyword.toLowerCase()) ||
         val.material.type.toLowerCase().includes(searchKeyword.toLowerCase())
     ) as any;
-  }, [searchKeyword]);
+  }, [searchKeyword, inventoryData]);
 
   const { setSummary, summary } = useContext(WeekSummaryContext);
 
@@ -109,39 +109,9 @@ export default function ActivitiesPage() {
 
   return (
     <article className="py-8 relative space-y-10">
-      {/* {showModal && (
-        <div
-          className="h-screen w-full bg-[rgba(0,0,0,.3)] fixed inset-0 z-95"
-          onClick={() => {
-            setShowModal(false);
-            setShowAddRact(false);
-          }}
-        ></div>
-      )}
-
-      {showAddRact && (
-        <div
-          className="h-screen w-full bg-[rgba(0,0,0,.3)] fixed inset-0 z-[96]"
-          onClick={() => {
-            setShowModal(false);
-            setShowAddRact(false);
-          }}
-        ></div>
-      )}
-      <ShelfContext value={{ shelfs, setShelfs }}>
-        <Modal showModal={showModal} setShowModal={setShowModal} />
-        {showAddRact && (
-          <AddRakDialog open={showAddRact} onOpenChange={setShowAddRact} />
-        )}
-      </ShelfContext> */}
-
       <header className="flex justify-between items-center gap-10">
         <SearchInput onSearchChange={setSearchKeyword} />
         <div className="flex gap-3 items-center flex-1 justify-end ">
-          {/* <Button type="button" className="cursor-pointer" variant={"ghost"}>
-            <Trash2 />
-            <p>Delete</p>
-          </Button> */}
           <div>
             <Button
               type="button"
