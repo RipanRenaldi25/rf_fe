@@ -14,7 +14,6 @@ export const lusitana = Lusitana({
 export const inter = Inter({ subsets: ["latin"] });
 
 export const handleError = (err: any) => {
-  console.log({ err });
   return {
     success: false,
     message: err.response?.data?.errors[0]?.message ?? err.message,

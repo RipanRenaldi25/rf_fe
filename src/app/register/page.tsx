@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { toast } from "react-toastify";
@@ -69,13 +69,20 @@ export default function Register() {
     toast.success(message, {
       autoClose: 1000,
       onClose: () => {
-        router.push("/login");
+        router.replace("/login");
       },
     });
   };
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setConfirmPassword] = useState(false);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      router.replace("/dashboard");
+    }
+  }, []);
 
   return (
     <article className="min-h-screen flex">

@@ -54,10 +54,11 @@ const defaultChartConfig = {
 export const PerformanceLineChart = ({
   chartData = defaultChartData,
   chartConfig = defaultChartConfig,
+  chartTitle = "PERFORMANCE",
 }) => {
   return (
     <div className="p-3 border-1 shadow-[2px_2px_5px_rgba(0,0,0,.1)] rounded-md">
-      <h1 className="font-semibold">PERFORMANCE</h1>
+      <h1 className="font-semibold">{chartTitle}</h1>
       <ChartContainer config={chartConfig}>
         <AreaChart
           data={chartData}

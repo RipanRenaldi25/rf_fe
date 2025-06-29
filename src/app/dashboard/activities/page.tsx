@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { ActivitiesTable } from "@/components/Dashboard/Activities/ActivitiesTable";
 import { ActivitiesColumn } from "@/components/Dashboard/Activities/Column";
@@ -18,7 +19,6 @@ export default function ActivitiesPage() {
   const { showModal, setShowModal } = useContext(ModalContext);
 
   const { setShelfs, shelfs } = useContext(ShelfContext);
-  console.log({ shelfsFetched: shelfs });
 
   // AMAN
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -39,7 +39,6 @@ export default function ActivitiesPage() {
   const { setSummary, summary } = useContext(WeekSummaryContext);
 
   const releaseMaterialHandler = async (row: any) => {
-    console.log({ row, summary });
     const { message, success, data } = await releaseMaterial(+row.id, {
       shelf_id: +row.shelf.id,
       stock: +row.stock,

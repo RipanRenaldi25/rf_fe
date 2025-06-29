@@ -12,7 +12,6 @@ import {
 } from "@/context/WeekSummaryContext";
 import { getAllInventories, getShelfs } from "@/lib/api/inventoryApi";
 import { getUserLogin } from "@/lib/api/userApi";
-import { usePathname } from "next/navigation";
 import React, {
   Suspense,
   useContext,
@@ -20,19 +19,17 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { BsCalculator } from "react-icons/bs";
-import { FiActivity } from "react-icons/fi";
-import { MdDashboard } from "react-icons/md";
 import SidebarWrapper from "./SidebarWrapper";
+import { useRouter } from "next/navigation";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  console.log("Layout rendered");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showAddRact, setShowAddRact] = useState<boolean>(false);
+  const router = useRouter();
 
   const [inventoryData, setInventoryData] = useState<
     ITransactionWithMaterial[]
@@ -69,6 +66,13 @@ export default function DashboardLayout({
     }
 
     Promise.all([fetchUserData(), fetchShelf(), fetchInventoryData()]);
+  }, []);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      router.replace("/login");
+    }
   }, []);
 
   const { summary } = useContext(WeekSummaryContext);

@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { ActivitiesTable } from "@/components/Dashboard/Activities/ActivitiesTable";
 import { Button } from "@/components/ui/button";
@@ -50,8 +51,6 @@ const OutputPage = () => {
   const { summary, setSummary } = useContext(WeekSummaryContext);
 
   const handleSubmit = async (values: z.infer<typeof InputSchema>) => {
-    console.log({ values });
-
     const { message, success, data } =
       await getInventoryTransactionsBelongToMaterial({
         name: values.name,
@@ -59,7 +58,6 @@ const OutputPage = () => {
         color: values.color,
         detail: values.detail,
       });
-    console.log({ data });
     if (!success) {
       toast.error("Terjadi kesalahan saat mengambil data", { autoClose: 1000 });
       return;
@@ -138,8 +136,6 @@ const OutputPage = () => {
       autoClose: 300,
     });
   };
-
-  console.log({ summaryFromOutput: summary });
 
   return (
     <article className="space-y-6">

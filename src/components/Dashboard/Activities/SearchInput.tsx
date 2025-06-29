@@ -23,7 +23,6 @@ const SearchInput = ({ onSearchChange }: { onSearchChange: any }) => {
         placeholder="Cari bahan"
         value={search}
         onChange={(e: any) => {
-          console.log(e.target.value);
           setSearch(e.target.value);
         }}
       />

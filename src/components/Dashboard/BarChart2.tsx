@@ -8,9 +8,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useEffect, useState } from "react";
-import { getRecapSummary } from "@/lib/api/StatisticAPI";
-import { toast } from "react-toastify";
 import { makeCapitalizeText } from "@/lib/utils";
 
 export const description = "A bar chart with a label";
@@ -54,10 +51,13 @@ const defaultChartConfig = {
 export function CustomBarChart({
   chartData = defaultChartData,
   chartConfig = defaultChartConfig,
-  chartTitle = "",
+  chartTitle = "Recap",
 }) {
   return (
-    <div className="border-1 rounded-md shadow-[2px_2px_3px_rgba(0,0,0,0.2)]">
+    <div className="p-4 border-1 rounded-md shadow-[2px_2px_3px_rgba(0,0,0,0.2)]">
+      <header>
+        <h1 className="font-semibold">{chartTitle}</h1>
+      </header>
       <ChartContainer
         config={chartConfig}
         className="p-3  min-h-[250px] font-bold  "

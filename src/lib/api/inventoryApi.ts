@@ -153,7 +153,6 @@ export const addMaterial = async (
       }
     );
     const { data } = response.data;
-    console.log({ dataAdded: data });
     return {
       success: true,
       message: "Bahan berhasil dimasukkan ke gudang",
@@ -341,8 +340,6 @@ export const calculate = async (
   data?: any;
 }> => {
   try {
-    console.log({ payload });
-
     const response = await axiosInstance.post(
       `${process.env.NEXT_PUBLIC_GRAPHQL_URL}`,
       {
@@ -397,8 +394,6 @@ export const calculate = async (
     );
 
     const { data } = response.data;
-
-    console.log({ data });
 
     return {
       success: true,
@@ -481,7 +476,6 @@ export const deleteProduct = async (
 
     const { data } = response.data;
 
-    console.log({ response, data: response.data });
     return {
       success: true,
       message: "Produk berhasil di hapus",
@@ -504,7 +498,6 @@ export const searchProduct = async (
   try {
     const page = payload?.page ?? 1;
     const size = payload?.size ?? 10;
-    console.log({ page, size });
     const response = await axiosInstance.post(
       `${process.env.NEXT_PUBLIC_GRAPHQL_URL}`,
       {
@@ -540,7 +533,6 @@ export const searchProduct = async (
     );
 
     const { data } = response.data;
-    console.log({ data: response.data });
 
     return {
       success: true,
@@ -587,8 +579,6 @@ export const addProduct = async (value: {
     );
 
     const { data } = response.data;
-    console.log({ response });
-    console.log({ data });
 
     return {
       success: true,

@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash, FaUserLarge } from "react-icons/fa6";
 import { IoKey } from "react-icons/io5";
@@ -40,9 +40,7 @@ export default function Login() {
     },
   });
   const onSubmitHandler = async (values: z.infer<typeof LoginFormSchema>) => {
-    console.log({ values });
     const { success, data, message } = await login(values);
-    console.log({ data });
 
     if (!success || !data) {
       toast.error(message);
@@ -54,16 +52,18 @@ export default function Login() {
 
     toast.success(message, {
       onClose: () => {
-        router.push("/dashboard");
+        router.replace("/dashboard");
       },
       autoClose: 1000,
     });
   };
 
-  console.log({
-    feEnv: process.env.NEXT_PUBLIC_GRAPHQL_URL,
-    beEnv: process.env.GRAPHQL_URL,
-  });
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      router.replace("/dashboard");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex relative items-center">

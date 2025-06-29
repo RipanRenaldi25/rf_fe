@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -98,8 +99,6 @@ const CalculatorPage = () => {
   const { setSummary } = useContext(WeekSummaryContext);
 
   const releaseMaterialHandler = async (payload: any) => {
-    console.log({ payload });
-
     const { message, success, data } = await releaseMaterial(+payload.id, {
       shelf_id: +payload.shelf.id,
       stock: +payload.stock,

@@ -3,9 +3,6 @@
 import { Area, AreaChart, LabelList, XAxis } from "recharts";
 
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { useEffect, useState } from "react";
-import { getWeekUsageStatistic } from "@/lib/api/StatisticAPI";
-import { toast } from "react-toastify";
 
 export const description = "A linear area chart";
 
@@ -59,10 +56,12 @@ const RenderCustomizedLabel = (props: any) => {
 export function EfficiencyLineChart({
   chartData = defaultChartData,
   chartConfig = defaultChartConfig,
+  chartTitle = "EFFICIENCY",
 }) {
+  console.log({ chartData });
   return (
     <div className=" border-1 shadow-[2px_2px_5px_rgba(0,0,0,.2)] rounded-md p-3 w-full">
-      <h1>EFFICIENCY</h1>
+      <h1 className="font-semibold">{chartTitle}</h1>
       <ChartContainer config={chartConfig}>
         <AreaChart
           data={chartData}

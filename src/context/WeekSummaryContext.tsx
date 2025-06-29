@@ -36,8 +36,6 @@ export const WeekSummaryProvider = ({ children }: Props) => {
     fetchData();
   }, []);
 
-  console.log({ summaryFromItsComponent: summary });
-
   return (
     <WeekSummaryContext.Provider value={{ summary, setSummary }}>
       {children}

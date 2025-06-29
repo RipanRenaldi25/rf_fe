@@ -60,7 +60,6 @@ export default function CustomSelect({
                     onClick={(e: any) => {
                       setSelected(option);
                       setOpen(false);
-                      console.log(e.target);
                       onChange(Number(option.id));
                     }}
                   >

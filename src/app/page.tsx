@@ -1,3 +1,4 @@
+"use client";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -5,6 +6,8 @@ import { getInitialUsername } from "@/lib/utils";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { TbCheckbox } from "react-icons/tb";
 import { VscQuote } from "react-icons/vsc";
 
@@ -66,6 +69,13 @@ const testimonialData = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      router.replace("/dashboard");
+    }
+  }, []);
   return (
     <article className="px-4 py-3 space-y-8">
       <header className="flex justify-between items-center sticky top-0 bg-white z-95 py-4">
@@ -94,8 +104,8 @@ export default function Home() {
               <p>Use Remnant Flow for efficient, sustainable production</p>
             </div>
             <div>
-              <Button className="bg-[#504B38] cursor-pointer ">
-                Get Started
+              <Button className="bg-[#504B38] cursor-pointer " asChild>
+                <Link href={"/register"}>Get Started</Link>
               </Button>
             </div>
           </div>

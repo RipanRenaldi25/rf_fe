@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 import { ActivitiesTable } from "@/components/Dashboard/Activities/ActivitiesTable";
 import SearchInput from "@/components/Dashboard/Activities/SearchInput";
 import { ProductColumn } from "@/components/Dashboard/product/Column";
@@ -74,7 +75,6 @@ export default function ProductPage() {
   const keyword = useDebounce(searchKeyword);
 
   const deleteProductHandler = async (row: IProduct) => {
-    console.log({ row });
     const { message, success, data } = await deleteProduct(row.id);
     if (!success) {
       toast.error("Terjadi kesalahan saat menghapus data", { autoClose: 500 });
@@ -100,8 +100,6 @@ export default function ProductPage() {
         });
         return;
       }
-
-      console.log({ data });
 
       setProducts(data.products);
       setTotalData(data.totalData);

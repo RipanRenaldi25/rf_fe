@@ -10,11 +10,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 
 const NavHeader = ({ userData = {} }: { userData: any }) => {
-  console.log("header re-rendered");
   return (
     <header className="fixed top-0 left-0 right-0  z-5 h-18 bg-white">
       <div className="flex justify-between items-center border-b-3 py-2 px-4">
-        <Image src="/logo.png" alt="logo" width={40} height={40} />
+        <Link href={"/dashboard"}>
+          <Image src="/logo.png" alt="logo" width={40} height={40} />
+        </Link>
         <div className="flex items-center gap-2">
           <p>HI! {userData?.name}!</p>
           <DropdownMenu>

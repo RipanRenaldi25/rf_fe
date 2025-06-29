@@ -10,7 +10,6 @@ export const login = async (
   data?: ILoginResponse | undefined;
 }> => {
   try {
-    console.log({ env: process.env.GRAPHQL_URL });
     const response = await axios.post(`${process.env.GRAPHQL_URL}`, {
       query: `
       mutation Login($payload: LoginPayload) {

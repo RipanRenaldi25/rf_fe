@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 import CustomBarChart from "@/components/Dashboard/BarChart2";
 import CustomPieChart, {
   defaultData,
@@ -69,19 +70,22 @@ export default function DashboardPage() {
           pieCharts.map(([key, value]: any) => {
             let fill = "";
             let tailwindColor = "";
+            let type = "";
             switch (key) {
               case "used_percentage":
                 fill = "#504B38";
                 tailwindColor = "bg-[#504B38]";
+                type = "Bahan Terpakai";
                 break;
               case "unused_percentage":
                 fill = "#EBE5C2";
                 tailwindColor = "bg-[#EBE5C2]";
+                type = "Bahan Tidak Terpakai";
                 break;
             }
             return {
-              type: key,
               data: value,
+              type,
               fill,
               tailwindColor,
             };
@@ -92,8 +96,6 @@ export default function DashboardPage() {
           (acc: number, [key, value]: any) => acc + value,
           0
         );
-
-        console.log({ dataToInsert });
 
         const wasteData = 100 - dataToInsert;
 

@@ -8,7 +8,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useEffect } from "react";
 
 export const description = "A pie chart with a label list";
 
@@ -41,13 +40,17 @@ export const defaultData = [
 export function CustomPieChart({
   chartData = defaultData,
   chartConfig = defaultChartConfig,
+  chartTitle = "USAGE",
 }: {
-  setChartData?: any;
   chartData: typeof defaultData;
   chartConfig?: typeof defaultChartConfig;
+  chartTitle?: string;
 }) {
   return (
     <div className="border-1 p-4 shadow-[2px_2px_5px_rgba(0,0,0,.1)] rounded-md">
+      <header>
+        <h1 className="font-semibold">{chartTitle}</h1>
+      </header>
       <ChartContainer config={chartConfig} className="min-h-[250px]">
         <PieChart>
           <ChartTooltip content={<ChartTooltipContent nameKey="type" />} />

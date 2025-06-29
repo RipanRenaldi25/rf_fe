@@ -26,7 +26,6 @@ interface SidebarWrapperProps {
 
 // Gunakan memo untuk mencegah rerender tanpa perlu
 const SidebarWrapper = ({ setShowModal }: SidebarWrapperProps) => {
-  console.log("wrapper rerendered");
   const pathName = usePathname();
 
   const menus = useMemo(
