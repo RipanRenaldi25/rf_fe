@@ -70,8 +70,10 @@ const CalculatorPage = () => {
   });
 
   const handleSubmit = async (values: z.infer<typeof calculateSchema>) => {
+    setIsLoading(true);
     if (values.type === "") {
       toast.error("Pilih kategori terlebih dahulu", { autoClose: 1000 });
+      setIsLoading(false);
       return;
     }
     setOpen(false);
@@ -90,6 +92,7 @@ const CalculatorPage = () => {
 
     if (!data) {
       toast.error("Tidak ada bahan di gudang", { autoClose: 300 });
+      setIsLoading(false);
       return;
     }
 
@@ -100,6 +103,7 @@ const CalculatorPage = () => {
           (val: any) => val.stock > 0
         ),
     });
+    setIsLoading(false);
   };
 
   const [open, setOpen] = useState<boolean>(false);
@@ -107,8 +111,11 @@ const CalculatorPage = () => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const { inventoryData, setInventoryData } = useContext(InventoryContext);
   const { setSummary, summary } = useContext(WeekSummaryContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isReleased, setIsReleased] = useState<boolean>(false);
 
   const releaseMaterialHandler = async (payload: any) => {
+    setIsReleased(true);
     const { message, success, data } = await releaseMaterial(+payload.id, {
       shelf_id: +payload.shelf.id,
       stock: +payload.stock,
@@ -117,6 +124,7 @@ const CalculatorPage = () => {
       toast.error("Terjadi kesalahan saat mengeluarkan barang  dari gudang", {
         autoClose: 300,
       });
+      setIsReleased(false);
       return;
     }
     setFetchedData((prevValue: any) => ({
@@ -154,6 +162,7 @@ const CalculatorPage = () => {
     toast.success(message, {
       autoClose: 300,
     });
+    setIsReleased(false);
   };
 
   return (
@@ -300,7 +309,13 @@ const CalculatorPage = () => {
                     />
                   </div>
                 </div>
-                <Button type="submit">Cari bahan</Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="cursor-pointer"
+                >
+                  {isLoading ? "Mencari bahan..." : "Cari Bahan"}
+                </Button>
               </form>
             </Form>
           </section>
@@ -345,7 +360,7 @@ const CalculatorPage = () => {
               </div>
 
               <DialogTrigger asChild>
-                <Button>Lihat Bahan</Button>
+                <Button className="cursor-pointer">Lihat Bahan</Button>
               </DialogTrigger>
             </CardContent>
           </Card>
@@ -374,6 +389,7 @@ const CalculatorPage = () => {
                           setSelectedIndex(i);
                           setSelectedData(inventory);
                         }}
+                        key={inventory.id}
                       >
                         <CardContent>
                           <div className="flex gap-3 items-center justify-between">
@@ -435,13 +451,14 @@ const CalculatorPage = () => {
             </div>
             <DialogFooter className="flex  justify-between items-center">
               <Button
-                className="bg-[#2AB675]"
+                className="bg-[#2AB675] hover:bg-[#2Ab674]/70 cursor-pointer"
                 onClick={(e) => {
                   releaseMaterialHandler(selectedData);
                   setSelectedIndex(null);
                 }}
+                disabled={isReleased}
               >
-                Keluarkan dari gudang
+                {isReleased ? "Sedang diproses..." : "Keluarkan dari gudang"}
               </Button>
             </DialogFooter>
           </DialogContent>
