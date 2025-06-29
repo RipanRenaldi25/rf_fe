@@ -51,7 +51,7 @@ const defaultChartConfig = {
 export function CustomBarChart({
   chartData = defaultChartData,
   chartConfig = defaultChartConfig,
-  chartTitle = "Recap",
+  chartTitle = "RECAP",
 }) {
   return (
     <div className="p-4 border-1 rounded-md shadow-[2px_2px_3px_rgba(0,0,0,0.2)]">
