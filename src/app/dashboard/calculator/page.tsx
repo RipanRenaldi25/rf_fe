@@ -46,6 +46,9 @@ const calculateSchema = z.object({
   color: z.string().min(1),
   pcs: z.string().min(1),
   requirementInPcs: z.string().min(1),
+  type: z.enum(["WASTE", "REUSE", "REUTILIZATION", ""], {
+    message: "Only Waste, Reuse and Reutilization is accepted",
+  }),
 });
 
 const CalculatorPage = () => {
@@ -54,7 +57,7 @@ const CalculatorPage = () => {
   );
   const [selectedData, setSelectedData] = useState({});
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof calculateSchema>>({
     resolver: zodResolver(calculateSchema),
     defaultValues: {
       color: "",
@@ -62,10 +65,15 @@ const CalculatorPage = () => {
       name: "",
       pcs: "",
       requirementInPcs: "",
+      type: "",
     },
   });
 
   const handleSubmit = async (values: z.infer<typeof calculateSchema>) => {
+    if (values.type === "") {
+      toast.error("Pilih kategori terlebih dahulu", { autoClose: 1000 });
+      return;
+    }
     setOpen(false);
     setFetchedData(null);
     const pcs = changeComaToDot(values.pcs);
@@ -77,6 +85,7 @@ const CalculatorPage = () => {
       name: values.name,
       pcs,
       requirementInPcs,
+      type: values.type,
     });
 
     if (!data) {
@@ -232,6 +241,31 @@ const CalculatorPage = () => {
                   </div>
                   <div className="flex-1 space-y-6">
                     <FormField
+                      control={form.control}
+                      name="type"
+                      render={({ field }) => {
+                        return (
+                          <div className="w-full space-y-2">
+                            <Label htmlFor="type">Kategori</Label>
+                            <FormControl>
+                              <select
+                                id="type"
+                                className="w-full p-2 border rounded-md"
+                                {...field}
+                              >
+                                <option value={""}>Pilih Kategori</option>
+                                <option value={"REUSE"}>Reuse</option>
+                                <option value={"REUTILIZATION"}>
+                                  Reutilization
+                                </option>
+                              </select>
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        );
+                      }}
+                    />
+                    <FormField
                       name="pcs"
                       control={form.control}
                       render={({ field }) => {
@@ -284,7 +318,15 @@ const CalculatorPage = () => {
       </Card>
 
       {fetchedData && (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog
+          open={open}
+          onOpenChange={(val) => {
+            setOpen(val);
+            if (!val) {
+              setSelectedIndex(null);
+            }
+          }}
+        >
           <Card>
             <CardContent className="flex px-4 rounded-full justify-between ">
               <div className="w-full relative">
@@ -404,7 +446,10 @@ const CalculatorPage = () => {
             <DialogFooter className="flex  justify-between items-center">
               <Button
                 className="bg-[#2AB675]"
-                onClick={(e) => releaseMaterialHandler(selectedData)}
+                onClick={(e) => {
+                  releaseMaterialHandler(selectedData);
+                  setSelectedIndex(null);
+                }}
               >
                 Keluarkan dari gudang
               </Button>

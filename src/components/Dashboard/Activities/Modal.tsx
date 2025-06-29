@@ -273,9 +273,7 @@ export const Modal = memo(
                             className="w-full p-2 border rounded-md"
                             {...field}
                           >
-                            <option value={""}>
-                              <p className="text-gray-200">Pilih Kategori</p>
-                            </option>
+                            <option value={""}>Pilih Kategori</option>
                             <option value={"REUSE"}>Reuse</option>
                             <option value={"REUTILIZATION"}>
                               Reutilization

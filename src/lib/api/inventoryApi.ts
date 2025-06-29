@@ -382,7 +382,7 @@ export const calculate = async (
             name: payload.name,
             color: payload.color,
             detail: payload.detail,
-            type: "REUTILIZATION",
+            type: payload.type,
           },
         },
       },

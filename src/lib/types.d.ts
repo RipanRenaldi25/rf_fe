@@ -94,6 +94,7 @@ interface ICalculatePayload {
   detail: string;
   pcs: number;
   requirementInPcs: number;
+  type: "REUSE" | "REUTILIZATION" | "WASTE";
 }
 
 interface ICalculateResponse {
