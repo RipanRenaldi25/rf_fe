@@ -2,18 +2,7 @@
 import { AddRakDialog } from "@/components/Dashboard/Activities/AddRactDialog";
 import { Modal } from "@/components/Dashboard/Activities/Modal";
 import NavHeader from "@/components/Dashboard/NavHeader";
-import { Button } from "@/components/ui/button";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
+import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 import { InventoryContext } from "@/context/InventoryContext";
 import { ModalContext } from "@/context/Modal";
 import { ShelfContext } from "@/context/ShelfContext";
@@ -22,16 +11,18 @@ import {
   WeekSummaryProvider,
 } from "@/context/WeekSummaryContext";
 import { getAllInventories, getShelfs } from "@/lib/api/inventoryApi";
-import { getLastWeekCategorySummary } from "@/lib/api/StatisticAPI";
 import { getUserLogin } from "@/lib/api/userApi";
-import { makeCapitalizeText } from "@/lib/utils";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  Suspense,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { BsCalculator } from "react-icons/bs";
 import { FiActivity } from "react-icons/fi";
 import { MdDashboard } from "react-icons/md";
-import { toast } from "react-toastify";
 import SidebarWrapper from "./SidebarWrapper";
 
 export default function DashboardLayout({
@@ -42,38 +33,6 @@ export default function DashboardLayout({
   console.log("Layout rendered");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showAddRact, setShowAddRact] = useState<boolean>(false);
-  const pathName = usePathname();
-
-  const menus = useMemo(
-    () => [
-      {
-        menu: "Dashboard",
-        url: "/dashboard",
-        isActive: pathName === "/dashboard",
-        icon: MdDashboard,
-      },
-      {
-        menu: "Activites",
-        url: "/dashboard/activities",
-        isActive: pathName === "/dashboard/activities",
-        icon: FiActivity,
-      },
-      {
-        menu: "Calculator",
-        url: "/dashboard/calculator",
-        isActive: pathName === "/dashboard/calculator",
-        icon: BsCalculator,
-      },
-    ],
-    [pathName]
-  );
-
-  const [fetchedData, setFetchedData] = useState<
-    {
-      type: string;
-      total: number;
-    }[]
-  >([]);
 
   const [inventoryData, setInventoryData] = useState<
     ITransactionWithMaterial[]
@@ -252,7 +211,7 @@ export default function DashboardLayout({
                         onOpenChange={setShowAddRact}
                       />
                     )}
-                    {children}
+                    <Suspense>{children}</Suspense>
                   </ShelfContext>
                 </ModalContext>
               </article>

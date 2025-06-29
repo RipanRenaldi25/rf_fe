@@ -29,7 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog } from "@radix-ui/react-dialog";
 import { Plus } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import z from "zod";
@@ -110,97 +110,99 @@ export default function ProductPage() {
   }, [keyword, searchParams.get("page")]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <div>
-        <article className="py-8 relative space-y-10">
-          <header className="flex justify-between items-center gap-10">
-            <SearchInput onSearchChange={setSearchKeyword} />
-            <div className="flex gap-3 items-center flex-1 justify-end ">
-              {/* <Button type="button" className="cursor-pointer" variant={"ghost"}>
+    <Suspense>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <div>
+          <article className="py-8 relative space-y-10">
+            <header className="flex justify-between items-center gap-10">
+              <SearchInput onSearchChange={setSearchKeyword} />
+              <div className="flex gap-3 items-center flex-1 justify-end ">
+                {/* <Button type="button" className="cursor-pointer" variant={"ghost"}>
                   <Trash2 />
                   <p>Delete</p>
                 </Button> */}
-              <div>
-                <DialogTrigger asChild>
-                  <Button
-                    type="button"
-                    className="bg-[#0070FF] hover:bg-[#005cd5] cursor-pointer"
-                  >
-                    <Plus />
-                    <p>Add New</p>
-                  </Button>
-                </DialogTrigger>
+                <div>
+                  <DialogTrigger asChild>
+                    <Button
+                      type="button"
+                      className="bg-[#0070FF] hover:bg-[#005cd5] cursor-pointer"
+                    >
+                      <Plus />
+                      <p>Add New</p>
+                    </Button>
+                  </DialogTrigger>
+                </div>
               </div>
-            </div>
-          </header>
+            </header>
 
-          <section>
-            <ActivitiesTable
-              columns={ProductColumn({
-                actions: { deleteProduct: deleteProductHandler },
-              })}
-              data={products}
-            />
-          </section>
+            <section>
+              <ActivitiesTable
+                columns={ProductColumn({
+                  actions: { deleteProduct: deleteProductHandler },
+                })}
+                data={products}
+              />
+            </section>
 
-          <DialogContent>
-            <DialogTitle>Tambah Produk</DialogTitle>
+            <DialogContent>
+              <DialogTitle>Tambah Produk</DialogTitle>
 
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(handleSubmit)}
-                className="space-y-5"
-              >
-                <FormField
-                  name="name"
-                  control={form.control}
-                  render={({ field }) => {
-                    return (
-                      <div className="space-y-2">
-                        <Label htmlFor="name">Nama Produk</Label>
-                        <FormControl>
-                          <Input
-                            id="name"
-                            placeholder="Jaket V Neck"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    );
-                  }}
-                />
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(handleSubmit)}
+                  className="space-y-5"
+                >
+                  <FormField
+                    name="name"
+                    control={form.control}
+                    render={({ field }) => {
+                      return (
+                        <div className="space-y-2">
+                          <Label htmlFor="name">Nama Produk</Label>
+                          <FormControl>
+                            <Input
+                              id="name"
+                              placeholder="Jaket V Neck"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      );
+                    }}
+                  />
 
-                <FormField
-                  name="required_weight"
-                  control={form.control}
-                  render={({ field }) => {
-                    return (
-                      <div className="space-y-2">
-                        <Label htmlFor="required_weight">Bahan Per PCS</Label>
-                        <FormControl>
-                          <Input
-                            id="required_weight"
-                            placeholder="0,25"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    );
-                  }}
-                />
+                  <FormField
+                    name="required_weight"
+                    control={form.control}
+                    render={({ field }) => {
+                      return (
+                        <div className="space-y-2">
+                          <Label htmlFor="required_weight">Bahan Per PCS</Label>
+                          <FormControl>
+                            <Input
+                              id="required_weight"
+                              placeholder="0,25"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      );
+                    }}
+                  />
 
-                <Button type="submit">Submit</Button>
-              </form>
-            </Form>
-          </DialogContent>
+                  <Button type="submit">Submit</Button>
+                </form>
+              </Form>
+            </DialogContent>
 
-          <section>
-            <PaginationTable />
-          </section>
-        </article>
-      </div>
-    </Dialog>
+            <section>
+              <PaginationTable />
+            </section>
+          </article>
+        </div>
+      </Dialog>
+    </Suspense>
   );
 }

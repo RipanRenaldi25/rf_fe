@@ -10,6 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Suspense } from "react";
 
 export const PaginationTable = () => {
   const searchParams = useSearchParams();
@@ -29,26 +30,28 @@ export const PaginationTable = () => {
   };
 
   return (
-    <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious onClick={() => onClickHandler("-")} />
-        </PaginationItem>
+    <Suspense>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious onClick={() => onClickHandler("-")} />
+          </PaginationItem>
 
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            {currentPage}
-          </PaginationLink>
-        </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#" isActive>
+              {currentPage}
+            </PaginationLink>
+          </PaginationItem>
 
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
 
-        <PaginationItem>
-          <PaginationNext onClick={() => onClickHandler("+")} />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+          <PaginationItem>
+            <PaginationNext onClick={() => onClickHandler("+")} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    </Suspense>
   );
 };
