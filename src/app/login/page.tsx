@@ -40,10 +40,12 @@ export default function Login() {
     },
   });
   const onSubmitHandler = async (values: z.infer<typeof LoginFormSchema>) => {
+    setIsLoading(true);
     const { success, data, message } = await login(values);
 
     if (!success || !data) {
       toast.error(message);
+      setIsLoading(false);
       return;
     }
 
@@ -53,6 +55,7 @@ export default function Login() {
     toast.success(message, {
       onClose: () => {
         router.replace("/dashboard");
+        setIsLoading(false);
       },
       autoClose: 1000,
     });
@@ -64,6 +67,8 @@ export default function Login() {
       router.replace("/dashboard");
     }
   }, []);
+
+  const [isLoadiing, setIsLoading] = useState<boolean>(false);
 
   return (
     <div className="min-h-screen flex relative items-center">
@@ -146,8 +151,9 @@ export default function Login() {
                   <Button
                     type="submit"
                     className="bg-[#544b3d] text-white py-2 rounded-lg cursor-pointer"
+                    disabled={isLoadiing}
                   >
-                    Login
+                    {isLoadiing ? "Logging in..." : "Login"}
                   </Button>
                   <Button
                     type="button"

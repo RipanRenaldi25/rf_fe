@@ -1,12 +1,9 @@
 "use client";
 export const dynamic = "force-dynamic";
 import CustomBarChart from "@/components/Dashboard/BarChart2";
-import CustomPieChart, {
-  defaultData,
-} from "@/components/Dashboard/CustomPieChart";
-import EfficiencyLineChart, {
-  defaultChartData,
-} from "@/components/Dashboard/EfficiencyLineChart";
+import CustomPieChart from "@/components/Dashboard/CustomPieChart";
+import EfficiencyLineChart from "@/components/Dashboard/EfficiencyLineChart";
+import NotFound from "@/components/Dashboard/NotFound";
 import { PerformanceLineChart } from "@/components/Dashboard/PerformanceLineChart";
 import { InventoryContext } from "@/context/InventoryContext";
 import {
@@ -15,16 +12,18 @@ import {
   getUsageStatistic,
   getWeekUsageStatistic,
 } from "@/lib/api/StatisticAPI";
-import { useContext } from "react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function DashboardPage() {
   const [barChartData, setBarChartData] = useState([]);
-  const [pieChartData, setPieChartData] = useState<any>([]);
-  const [lineChartData, setLineChartData] = useState<any>([]);
-  const [performanceData, setPerformanceData] = useState<any>([]);
+  const [pieChartData, setPieChartData] = useState<any[]>([]);
+  const [lineChartData, setLineChartData] = useState<any[]>([]);
+  const [performanceData, setPerformanceData] = useState<any[]>([]);
   const { inventoryData } = useContext(InventoryContext);
+  const [isPerformanceChartEmpty, setIsPerformanceChartEmpty] =
+    useState<boolean>(false);
+  const [isLineChartEmpty, setIsLineChartEmpty] = useState<boolean>(false);
 
   useEffect(() => {
     async function recapSummary() {
@@ -68,8 +67,8 @@ export default function DashboardPage() {
         toast.error(message);
         return;
       }
-      const pieCharts = Object.entries(data);
       if (data) {
+        const pieCharts = Object.entries(data);
         setPieChartData(
           pieCharts.map(([key, value]: any) => {
             let fill = "";
@@ -125,6 +124,10 @@ export default function DashboardPage() {
         toast.error(message);
         return;
       }
+      const isEmpty = (data as any[]).every((val) => val.used_percentage === 0);
+      if (isEmpty) {
+        setIsLineChartEmpty(true);
+      }
       setLineChartData(
         data.map((val: any) => {
           return {
@@ -140,6 +143,12 @@ export default function DashboardPage() {
       if (!success) {
         toast.error(message);
         return;
+      }
+      const isEmpty = (data as any[]).every((val) => {
+        return val.input === 0 && val.output === 0;
+      });
+      if (isEmpty) {
+        setIsPerformanceChartEmpty(true);
       }
       setPerformanceData(
         data.map((val: { week: number; input: number; output: number }) => {
@@ -160,16 +169,32 @@ export default function DashboardPage() {
     ]);
   }, [inventoryData]);
 
+  console.log({
+    barChartData,
+    pieChartData,
+    lineChartData: isLineChartEmpty,
+    performanceData: isPerformanceChartEmpty,
+  });
+
   return (
     <article className="w-full">
-      <section className="flex gap-3 p-3 ">
-        <CustomBarChart chartData={barChartData} />
-        <CustomPieChart chartData={pieChartData} />
-      </section>
-      <section className="p-3 space-y-3">
-        <EfficiencyLineChart chartData={lineChartData} />
-        <PerformanceLineChart chartData={performanceData} />
-      </section>
+      {barChartData.length === 0 &&
+      pieChartData.length === 0 &&
+      isLineChartEmpty &&
+      isPerformanceChartEmpty ? (
+        <NotFound />
+      ) : (
+        <>
+          <section className="flex gap-3 p-3 ">
+            <CustomBarChart chartData={barChartData} />
+            <CustomPieChart chartData={pieChartData} />
+          </section>
+          <section className="p-3 space-y-3">
+            <EfficiencyLineChart chartData={lineChartData} />
+            <PerformanceLineChart chartData={performanceData} />
+          </section>
+        </>
+      )}
     </article>
   );
 }

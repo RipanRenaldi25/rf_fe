@@ -16,7 +16,7 @@ import { addMaterial } from "@/lib/api/inventoryApi";
 import { changeComaToDot } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlignVerticalDistributeStart, X } from "lucide-react";
-import { memo, useContext } from "react";
+import { memo, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
@@ -60,11 +60,14 @@ export const Modal = memo(
     const pathName = usePathname();
 
     const { setSummary, summary } = useContext(WeekSummaryContext);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleSubmit = async (values: z.infer<typeof InputSchema>) => {
+      setIsLoading(true);
       const stock = changeComaToDot(values.stock);
       if (values.type === "") {
         toast.error("Pilih kategori terlebih dahulu", { autoClose: 1000 });
+        setIsLoading(false);
         return;
       }
       const payload: IAddInventoryPayload = {
@@ -77,6 +80,7 @@ export const Modal = memo(
 
       if (!success) {
         toast.error(message, { autoClose: 1000 });
+        setIsLoading(false);
         return;
       }
 
@@ -132,6 +136,8 @@ export const Modal = memo(
       }
       form.reset();
       setSelected(null);
+
+      setIsLoading(false);
       toast.success(message, {
         autoClose: 500,
       });
@@ -316,8 +322,9 @@ export const Modal = memo(
             <Button
               className="min-w-2/12 bg-[#99BC85]/50 text-black font-bold border-1 border-black hover:bg-[#99BC85]/10 cursor-pointer"
               type="submit"
+              disabled={isLoading}
             >
-              INPUT
+              {isLoading ? "Sedang Menambahkan Data..." : "INPUT"}
             </Button>
           </form>
         </Form>

@@ -48,7 +48,7 @@ const defaultChartConfig = {
   },
 } satisfies ChartConfig;
 
-export function CustomBarChart({
+export default function CustomBarChart({
   chartData = defaultChartData,
   chartConfig = defaultChartConfig,
   chartTitle = "RECAP",
@@ -89,5 +89,3 @@ export function CustomBarChart({
     </div>
   );
 }
-
-export default CustomBarChart;

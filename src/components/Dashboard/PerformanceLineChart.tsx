@@ -103,3 +103,5 @@ export const PerformanceLineChart = ({
     </div>
   );
 };
+
+export default PerformanceLineChart;

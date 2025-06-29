@@ -14,7 +14,7 @@ import { addRact } from "@/lib/api/inventoryApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent } from "@radix-ui/react-dialog";
 import { Plus } from "lucide-react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
@@ -42,8 +42,10 @@ export function AddRakDialog({
   });
 
   const { setShelfs, shelfs } = useContext(ShelfContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleAddRact = async (values: z.infer<typeof ractSchema>) => {
+    setIsLoading(true);
     const isExists = shelfs.some(
       (shelf) =>
         shelf.rack === values.ract.toUpperCase() &&
@@ -53,6 +55,7 @@ export function AddRakDialog({
       toast.error(`Rak ${values.ract}${values.number} sudah ada`, {
         autoClose: 1000,
       });
+      setIsLoading(false);
       return;
     }
     const { message, success, data } = await addRact({
@@ -70,6 +73,7 @@ export function AddRakDialog({
       ]);
       toast.success(message, { autoClose: 300 });
     }
+    setIsLoading(false);
     onOpenChange(false);
   };
 
@@ -125,9 +129,13 @@ export function AddRakDialog({
                 }}
               />
 
-              <Button type="submit">
+              <Button
+                type="submit"
+                className="cursor-pointer"
+                disabled={isLoading}
+              >
                 <Plus />
-                Tambah Rak
+                {isLoading ? "Menambah rak..." : "Tambah Rak"}
               </Button>
             </form>
           </Form>
