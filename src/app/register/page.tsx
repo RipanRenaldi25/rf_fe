@@ -55,6 +55,7 @@ export default function Register() {
   const onSubmitHandler = async (
     values: Omit<z.infer<typeof RegisterSchema>, "confirm_password">
   ) => {
+    setIsLoading(true);
     const { message, success, data } = await register({
       company_name: values.company_name,
       email: values.email,
@@ -64,11 +65,13 @@ export default function Register() {
     });
     if (!success || !data) {
       toast.error(message);
+      setIsLoading(false);
       return;
     }
     toast.success(message, {
       autoClose: 1000,
       onClose: () => {
+        setIsLoading(false);
         router.replace("/login");
       },
     });
@@ -76,6 +79,7 @@ export default function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -237,8 +241,12 @@ export default function Register() {
               }}
             />
 
-            <Button type="submit" className="bg-[#504B38]">
-              Register
+            <Button
+              type="submit"
+              className="bg-[#504B38] transition-colors"
+              disabled={isLoading}
+            >
+              {isLoading ? "Loading..." : "Register"}
             </Button>
             <p className="flex items-center justify-center gap-2">
               <span className="opacity-50">Punya akun? </span>
