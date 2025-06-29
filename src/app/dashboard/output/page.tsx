@@ -50,8 +50,11 @@ const OutputPage = () => {
 
   const [tableData, setTableData] = useState<ITransactionWithMaterial[]>([]);
   const { summary, setSummary } = useContext(WeekSummaryContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isReleased, setIsReleased] = useState<boolean>(false);
 
   const handleSubmit = async (values: z.infer<typeof InputSchema>) => {
+    setIsLoading(true);
     const { message, success, data } =
       await getInventoryTransactionsBelongToMaterial({
         name: values.name,
@@ -61,16 +64,25 @@ const OutputPage = () => {
       });
     if (!success) {
       toast.error("Terjadi kesalahan saat mengambil data", { autoClose: 1000 });
+      setIsLoading(false);
+      return;
+    }
+    console.log({ data });
+    if (!data || !data.length) {
+      toast.error("Data tidak ditemukan", { autoClose: 1000 });
+      setIsLoading(false);
       return;
     }
 
     setTableData(data);
+    setIsLoading(false);
   };
 
   const { inventoryData, setInventoryData } = useContext(InventoryContext);
   const router = useRouter();
 
   const releaseMaterialHandler = async (row: any) => {
+    setIsReleased(true);
     const { message, success, data } = await releaseMaterial(+row.id, {
       shelf_id: +row.shelf.id,
       stock: +row.stock,
@@ -80,6 +92,7 @@ const OutputPage = () => {
       toast.error("Terjadi kesalahan saat mengeluarkan data dari gudang", {
         autoClose: 1000,
       });
+      setIsReleased(false);
       return;
     }
 
@@ -139,6 +152,7 @@ const OutputPage = () => {
     toast.success(message, {
       autoClose: 300,
     });
+    setIsReleased(false);
   };
 
   return (
@@ -249,8 +263,9 @@ const OutputPage = () => {
               <Button
                 className="w-full bg-[#99BC85]/50 text-black font-bold border-1 border-black hover:bg-[#99BC85]/10 cursor-pointer"
                 type="submit"
+                disabled={isLoading}
               >
-                Cari Bahan
+                {isLoading ? "Mencari bahan..." : "Cari Bahan"}
               </Button>
             </form>
           </Form>
@@ -259,7 +274,7 @@ const OutputPage = () => {
       <section>
         <ActivitiesTable
           columns={OutputColumn({
-            actions: { output: releaseMaterialHandler },
+            actions: { output: releaseMaterialHandler, isReleased },
           })}
           data={tableData}
         />

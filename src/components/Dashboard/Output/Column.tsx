@@ -112,16 +112,19 @@ export const OutputColumn = ({
             align="end"
             className="shadow-md cursor-pointer rounded-md"
           >
-            <DropdownMenuGroup className="py-4">
+            <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Button
                   type="button"
                   variant={"destructive"}
                   className="cursor-pointer bg-[#BF3131]"
                   onClick={() => actions.output(row.original)}
+                  disabled={actions.isReleased}
                 >
                   <Trash className="text-white " />
-                  Keluarkan dari gudang
+                  {actions.isReleased
+                    ? "Sedang diproses..."
+                    : "Keluarkan dari gudang"}
                 </Button>
               </DropdownMenuItem>
             </DropdownMenuGroup>

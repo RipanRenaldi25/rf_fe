@@ -45,7 +45,7 @@ export const ProductColumn = ({
               align="end"
               className="shadow-md cursor-pointer rounded-md"
             >
-              <DropdownMenuGroup className="py-4">
+              <DropdownMenuGroup>
                 <DropdownMenuItem>
                   <Button
                     type="button"
