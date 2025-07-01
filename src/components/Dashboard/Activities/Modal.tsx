@@ -1,4 +1,6 @@
 "use client";
+import ColorPicker from "@rc-component/color-picker";
+import "@rc-component/color-picker/assets/index.css";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,26 +14,28 @@ import { Label } from "@/components/ui/label";
 import { InventoryContext } from "@/context/InventoryContext";
 import { ModalContext } from "@/context/Modal";
 import { ShelfContext } from "@/context/ShelfContext";
+import { WeekSummaryContext } from "@/context/WeekSummaryContext";
 import { addMaterial } from "@/lib/api/inventoryApi";
 import { changeComaToDot } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlignVerticalDistributeStart, X } from "lucide-react";
+import Decimal from "decimal.js";
+import { X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { memo, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import CustomSelect from "./CustomSelect";
-import { WeekSummaryContext } from "@/context/WeekSummaryContext";
-import { usePathname } from "next/navigation";
-import Decimal from "decimal.js";
 
 const InputSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   detail: z.string().min(1, { message: "Detail is required" }),
   color: z
     .string()
-    .min(7, { message: "Warna heksa minimal 7 karakter" })
-    .max(7, { message: "Warna heksa maksimal 7 karakter" }),
+    .min(6, {
+      message: "Warna heksa minimal 6 karakter (ex: #ffffff atau ffffff)",
+    })
+    .max(7, { message: "Warna heksa maksimal 7 karakter (dengan #)" }),
   stock: z
     .string()
     .min(1, { message: "Stock minimum is greather than 10 gram" }),
@@ -152,12 +156,14 @@ export const Modal = memo(
 
     return (
       <section
-        className={`fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2  border  w-2/3 bg-white z-95 p-10 py-8 transition-all rounded-lg border-black scale-0  duration-300 ${
+        className={`overflow-y-auto max-h-[90%]  fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2  border  w-2/3 bg-white z-95 p-10 py-8 transition-all rounded-lg border-black scale-0  duration-300 ${
           showModal && "scale-100"
         }`}
       >
         <header className="flex items-center justify-center mb-7 relative">
-          <h1 className="text-black text-xl font-bold">DATA INPUT</h1>
+          <h1 className="text-black text-xl font-bold">
+            DATA INPUT SISA BAHAN
+          </h1>
           <Button
             type="button"
             variant={"ghost"}
@@ -170,7 +176,7 @@ export const Modal = memo(
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-10"
+            className="space-y-10 "
           >
             <div className="flex flex-col lg:flex-row gap-10">
               <div className="flex-1 space-y-7">
@@ -245,29 +251,6 @@ export const Modal = memo(
                     );
                   }}
                 />
-              </div>
-              <div className="flex-1 space-y-7">
-                <FormField
-                  control={form.control}
-                  name="color"
-                  render={({ field }) => {
-                    return (
-                      <div className="w-full space-y-2">
-                        <Label htmlFor="color">Warna</Label>
-                        <FormControl>
-                          <Input
-                            id="color"
-                            type="text"
-                            {...field}
-                            placeholder="#ffffff"
-                            className="w-full"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    );
-                  }}
-                />
 
                 <FormField
                   control={form.control}
@@ -312,6 +295,36 @@ export const Modal = memo(
                               field.onChange(val);
                               setSelected = setSelectedFunc;
                             }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    );
+                  }}
+                />
+              </div>
+              <div className="flex-1 space-y-7">
+                <FormField
+                  control={form.control}
+                  name="color"
+                  render={({ field }) => {
+                    return (
+                      <div className="w-full space-y-2 relative">
+                        <Label htmlFor="color">Warna</Label>
+
+                        <ColorPicker
+                          value={field.value}
+                          onChange={(color) =>
+                            field.onChange(color.toHexString())
+                          }
+                        />
+                        <FormControl>
+                          <Input
+                            id="color"
+                            type="text"
+                            {...field}
+                            placeholder="#ffffff"
+                            className="w-full"
                           />
                         </FormControl>
                         <FormMessage />

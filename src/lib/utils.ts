@@ -63,3 +63,10 @@ export const getInitialUsername = (name: string) => {
 
   return initialName;
 };
+
+export const addCrashToString = (color: string): string => {
+  if (color.includes("#")) {
+    return color;
+  }
+  return `#${color}`;
+};

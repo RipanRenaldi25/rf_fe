@@ -337,22 +337,23 @@ const CalculatorPage = () => {
               <div className="w-full relative">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h1>Total Bahan Yang Dibutuhkan </h1>
-                    <p className="font-bold">
-                      {fetchedData.totalNeededMaterialInKg ?? 0} Kg
+                    <h1 className="flex-1">Total Bahan Yang Dibutuhkan</h1>
+                    <p className="font-bold flex-1">
+                      : {fetchedData.totalNeededMaterialInKg ?? 0} Kg
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <h1>Barang yang tersedia di gudang: </h1>
-                    <p className="font-bold">
-                      {fetchedData.stockInInventory ?? 0} Kg
+                    <h1 className="flex-1">Barang yang tersedia di gudang</h1>
+                    <p className="font-bold flex-1">
+                      : {fetchedData.stockInInventory ?? 0} Kg
                     </p>
                   </div>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h1>Sisa Bahan Yang Dibutuhkan: </h1>
-                    <p className="font-bold">
+                    <h1 className="flex-1">Sisa Bahan Yang Perlu Dibeli</h1>
+                    <p className="font-bold flex-1 text-red-500">
+                      <span className="text-black">:</span>{" "}
                       {fetchedData.neededMaterialInKg ?? 0} Kg
                     </p>
                   </div>

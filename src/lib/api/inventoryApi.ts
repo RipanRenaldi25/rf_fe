@@ -1,5 +1,5 @@
 "use client";
-import { changeComaToDot, handleError } from "../utils";
+import { addCrashToString, changeComaToDot, handleError } from "../utils";
 import axiosInstance from "./axiosInstance";
 
 export const fetchData = async (
@@ -108,6 +108,7 @@ export const addMaterial = async (
   data?: any;
 }> => {
   try {
+    const crashedColor = addCrashToString(payload.color);
     const response = await axiosInstance.post(
       `${process.env.NEXT_PUBLIC_GRAPHQL_URL}`,
       {
@@ -143,6 +144,7 @@ export const addMaterial = async (
         variables: {
           payload: {
             ...payload,
+            color: crashedColor,
           },
         },
       },

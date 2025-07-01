@@ -169,7 +169,7 @@ export default function Home() {
               <div className="relative">
                 <div className="text-white flex items-center gap-2 rounded-full bg-[#504B38] px-4 py-1 w-min">
                   <div className="size-2 rounded-full bg-white"></div>
-                  <h1>Reutilization</h1>
+                  <h1>Reuse</h1>
                 </div>
                 <Card className="bg-white/70 mt-10">
                   <CardContent className="">
